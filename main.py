@@ -23,8 +23,8 @@ class DB:
 def apply_migration(db: DB):
     cursor = db.cursor()
 
-    # execute migration.sql
-    with open("migration.sql", "r") as f:
+    # execute schema.sql
+    with open("schema.sql", "r") as f:
         sql = f.read()
         statements = [s.strip() for s in sql.split(";") if s.strip()]
         for statement in statements:
@@ -36,7 +36,7 @@ def apply_migration(db: DB):
 def populate_data(db: DB):
     cursor = db.cursor()
 
-    # execute migration.sql
+    # execute schema.sql
     with open("dataset.sql", "r") as f:
         sql = f.read()
         statements = [s.strip() for s in sql.split(";") if s.strip()]
