@@ -45,7 +45,6 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
                     # Converts "12346.0" -> 12346.0 -> 12346 -> "12346"
                     clean_customer_id = str(int(float(raw_customer_id)))
                 except ValueError:
-                    # If the ID contains letters (non-numeric), just use it as is
                     clean_customer_id = raw_customer_id.upper()
 
             yield DataRow(
@@ -59,7 +58,7 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
                 # customer_id=None
                 # if row["Customer ID"] == ""
                 # else row["Customer ID"].upper(),
-                customer_id=clean_customer_id, # Use the cleaned ID
+                customer_id=clean_customer_id,
             )
 
 
