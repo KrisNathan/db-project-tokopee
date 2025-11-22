@@ -1,8 +1,16 @@
 # Tokopee
 
+This project uses Git LFS for storing the provided dataset and it's conversion to SQL.
+
+## System Dependency
+
+- `uv`
+- `npm`
+- `docker` (optional)
+
 ## Rendering ERD Diagrams
 
-Ensure you have npm installed.
+Ensure you have npm installed for this step.
 
 ```sh
 uv run render_erd.py
