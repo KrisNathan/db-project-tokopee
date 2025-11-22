@@ -1,0 +1,30 @@
+erDiagram
+	Customer ||--o{ Invoice : has
+	Invoice ||--|{ InvoiceItem : has
+	InvoiceItem }|--|| Item: is
+
+	Customer {
+		varchar(20) CustomerId PK
+		varchar(100) CustomerName
+		varchar(50) CustomerCountry
+	}
+
+	Item {
+		varchar(20) StockCode PK
+		varchar(255) Description
+		decimal Price
+		int InventoryQuantity
+	}
+
+	Invoice {
+		varchar(20) InvoiceId PK
+		date InvoiceDate
+		varchar(20) CustomerId FK
+		decimal TotalPrice
+	}
+
+	InvoiceItem {
+		varchar(20) InvoiceId FK, PK
+		varchar(20) ItemStockCode FK, PK
+		int Quantity
+	}
