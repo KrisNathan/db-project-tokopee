@@ -45,7 +45,7 @@ WHERE StockCode = '10080';
 -- Verify the order
 SELECT * FROM Invoice WHERE InvoiceId = 'INV_NEW001';
 SELECT * FROM InvoiceItem WHERE InvoiceId = 'INV_NEW001';
-
+SELECT * FROM Item WHERE StockCode = '10002';
 
 
 -- Query 3: Customer Return
@@ -87,7 +87,7 @@ WHERE StockCode = @return_stockcode;
 -- Verify the return
 SELECT * FROM Invoice WHERE InvoiceId = 'INV_NEW001';
 SELECT * FROM InvoiceItem WHERE InvoiceId = 'INV_NEW001';
-SELECT * FROM Item WHERE StockCode = 'NEW001';
+SELECT * FROM Item WHERE StockCode = '10002';
 
 
 

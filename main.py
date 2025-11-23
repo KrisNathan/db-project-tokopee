@@ -24,7 +24,7 @@ def apply_migration(db: DB):
     cursor = db.cursor()
 
     # execute schema.sql
-    with open("schema.sql", "r") as f:
+    with open("sql/schema.sql", "r") as f:
         sql = f.read()
         statements = [s.strip() for s in sql.split(";") if s.strip()]
         for statement in statements:
