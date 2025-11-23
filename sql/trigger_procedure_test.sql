@@ -1,63 +1,26 @@
--- Trigger: 
--- Create a trigger that automatically updates the inventory level of a product 
--- whenever a transaction (sale or return) involving that product is recorded.
+-- Check initial state
+SELECT StockCode, InventoryQuantity FROM Item WHERE StockCode = 'NEW001';
 
-DROP TRIGGER IF EXISTS Inventory_AfterInsert;
-DROP TRIGGER IF EXISTS Inventory_AfterDelete;
-DROP TRIGGER IF EXISTS Inventory_AfterUpdate;
+-- TEST 1: Sell 5 items (Trigger should reduce Inventory by 5)
+INSERT INTO Invoice (InvoiceId, InvoiceDate, CustomerId, TotalPrice) 
+VALUES ('TEST_AUTO_01', NOW(), '12346', 0);
+INSERT INTO InvoiceItem (InvoiceId, ItemStockCode, Quantity) 
+VALUES ('TEST_AUTO_01', 'NEW001', 5);
 
+-- Verify Inventory (Should be 5 less)
+SELECT StockCode, InventoryQuantity FROM Item WHERE StockCode = 'NEW001';
 
--- Sale, When a new item is added into invoice, substract from inventory
-CREATE TRIGGER Inventory_AfterInsert
-AFTER INSERT ON InvoiceItem
-FOR EACH ROW
-BEGIN
-  UPDATE Item
-  SET InventoryQuantity = InventoryQuantity - NEW.Quantity
-  WHERE StockCode = NEW.ItemStockCode;
-END;
-  
--- Return, When a new item is removed from invoice, add it back into inventory
-CREATE TRIGGER Inventory_AfterDelete
-AFTER DELETE ON InvoiceItem
-FOR EACH ROW
-BEGIN
-  UPDATE Item
-  SET InventoryQuantity = InventoryQuantity + OLD.Quantity
-  WHERE StockCode = OLD.ItemStockCode;
-END;
-  
--- Return, When a quantity is changed, adjust inventory by difference
-CREATE TRIGGER Inventory_AfterUpdate
-AFTER UPDATE ON InvoiceItem
-FOR EACH ROW
-BEGIN
-  IF OLD.Quantity <> NEW.Quantity THEN
-    UPDATE Item 
-    SET InventoryQuantity = InventoryQuantity - (NEW.Quantity - OLD.Quantity)
-    WHERE StockCode = NEW.ItemStockCode;
-  END IF;
-END;
+-- TEST 2: Partial Return/Update (Change Qty from 5 to 2) -> Return 3 items
+UPDATE InvoiceItem SET Quantity = 2 WHERE InvoiceId = 'TEST_AUTO_01';
 
+-- Verify Inventory (Should increase by 3)
+SELECT StockCode, InventoryQuantity FROM Item WHERE StockCode = 'NEW001';
 
--- Stored Procedure: Create a stored procedure named GetCustomerInvoiceHistory 
--- that accepts a CustomerID as input and returns a complete list of all invoices 
--- (including the date and total value) belonging to that customer.
+-- TEST 3: Full Return (Delete Row) -> Return remaining 2 items
+DELETE FROM InvoiceItem WHERE InvoiceId = 'TEST_AUTO_01';
 
-DROP PROCEDURE IF EXISTS GetCustomerInvoiceHistory;
+-- Verify Inventory (Should be back to original)
+SELECT StockCode, InventoryQuantity FROM Item WHERE StockCode = 'NEW001';
 
-CREATE PROCEDURE GetCustomerInvoiceHistory (
-  IN p_CustomerId VARCHAR(20)
-)
-BEGIN 
-  SELECT 
-    inv.InvoiceId,
-    inv.InvoiceDate,
-    inv.TotalPrice,
-    COUNT(ii.ItemStockCode) as ItemsCount
-  FROM Invoice inv
-  LEFT JOIN InvoiceItem ii ON inv.InvoiceId = ii.InvoiceId
-  WHERE inv.CustomerId = p_CustomerId
-  GROUP BY inv.InvoiceId, inv.InvoiceDate, inv.TotalPrice
-  ORDER BY inv.InvoiceDate DESC;
-END;
+-- TEST 4: Run Stored Procedure
+CALL GetCustomerInvoiceHistory('12682');
