@@ -2,6 +2,12 @@
 
 This project uses Git LFS for storing the provided dataset and it's conversion to SQL.
 
+## Contributors
+- @KrisNathan
+- @orde-r
+- @florenciaolga
+
+
 ## System Dependency
 
 - `uv`
