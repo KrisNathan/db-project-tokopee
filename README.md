@@ -3,10 +3,9 @@
 This project uses Git LFS for storing the provided dataset and it's conversion to SQL.
 
 ## Contributors
-- @KrisNathan
-- @orde-r
-- @florenciaolga
-
+- [@KrisNathan](https://github.com/KrisNathan) (Kristopher N.)
+- [@orde-r](https://github.com/orde-r) (Danielson)
+- [@florenciaolga](https://github.com/florenciaolga) (Florencia Olga)
 
 ## System Dependency
 
