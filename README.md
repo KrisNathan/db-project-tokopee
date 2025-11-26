@@ -9,13 +9,13 @@ This project uses Git LFS for storing the provided dataset and it's conversion t
 - `docker` (optional)
 
 ## Applying Migration and Populating Database with Dataset
-make sure to drop the database before running
+make sure to drop the database before running (if have run before)
 ```sh
 uv run main.py
 ```
 
 ## SQL Queries
-The files are on in the sql folder
+The files are in the sql folder
 ```
 ./sql
 ```
