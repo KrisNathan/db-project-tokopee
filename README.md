@@ -8,7 +8,19 @@ This project uses Git LFS for storing the provided dataset and it's conversion t
 - `npm`
 - `docker` (optional)
 
-## Rendering ERD Diagrams
+## Applying Migration and Populating Database with Dataset
+make sure to drop the database before running
+```sh
+uv run main.py
+```
+
+## SQL Queries
+The files are on in the sql folder
+```
+./sql
+```
+
+## Rendering ERD Diagrams (Optional)
 
 Ensure you have npm installed for this step.
 
@@ -16,14 +28,8 @@ Ensure you have npm installed for this step.
 uv run render_erd.py
 ```
 
-## Convert Dataset to SQL
+## Convert Dataset to SQL (Optional)
 
 ```sh
 uv run dataset_sql_builder.py
-```
-
-## Applying Migration and Populating Database with Dataset
-
-```sh
-uv run main.py
 ```
