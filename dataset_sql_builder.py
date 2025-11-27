@@ -36,6 +36,17 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
             parsed_dt = datetime.strptime(
                 row["InvoiceDate"].strip(), "%Y-%m-%d %H:%M:%S"
             )
+
+            raw_customer_id = row["Customer ID"]
+            clean_customer_id = None
+            
+            if raw_customer_id:
+                try:
+                    # Converts "12346.0" -> 12346.0 -> 12346 -> "12346"
+                    clean_customer_id = str(int(float(raw_customer_id)))
+                except ValueError:
+                    clean_customer_id = raw_customer_id.upper()
+
             yield DataRow(
                 invoice=row["Invoice"].upper(),
                 stock_code=row["StockCode"].upper(),
@@ -44,9 +55,10 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
                 invoice_date=parsed_dt,
                 price=Decimal(row["Price"]),
                 country=row["Country"],
-                customer_id=None
-                if row["Customer ID"] == ""
-                else row["Customer ID"].upper(),
+                # customer_id=None
+                # if row["Customer ID"] == ""
+                # else row["Customer ID"].upper(),
+                customer_id=clean_customer_id,
             )
 
 
