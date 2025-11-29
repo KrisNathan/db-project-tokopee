@@ -6,6 +6,7 @@ Note regarding handling of price changes over time:
 2. total price listed in invoice is result of price * quantity at time of purchase
 3. we assume that price changes do not affect past invoices
 4. accounting wise, the total price listed in invoice is already sufficient
+5. item price listed in item table is the latest price
 
 This project uses Git LFS for storing the provided dataset and it's conversion to SQL.
 
