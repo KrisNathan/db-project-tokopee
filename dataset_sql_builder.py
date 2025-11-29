@@ -124,18 +124,23 @@ def main():
             except ValidationError as e:
                 pass
 
-        if row.invoice not in invoices and row.customer_id:
+        total_price = row.price * Decimal(str(row.quantity))
+        if row.invoice not in invoices:
             try:
                 invoice = Invoice(
                     invoice_id=row.invoice,
                     invoice_date=row.invoice_date,
                     customer_id=row.customer_id,
-                    total_price=row.price,
+                    total_price=total_price,
                 )
                 invoices[row.invoice] = invoice
             except Exception as e:
                 # print(f"ERROR: {row}\n{e}")
                 pass
+        elif row.invoice in invoices:
+            invoices[row.invoice].total_price += total_price
+            if row.customer_id:
+                invoices[row.invoice].customer_id = row.customer_id
 
         if (
             row.invoice
