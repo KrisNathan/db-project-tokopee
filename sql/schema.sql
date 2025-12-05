@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS Customer (
 );
 
 CREATE TABLE IF NOT EXISTS Item (
-    StockCode           VARCHAR(20)     NOT NULL,
+    ItemStockCode       VARCHAR(20)     NOT NULL,
     Description         VARCHAR(255)    NOT NULL,
     Price               DECIMAL(12, 3)  NOT NULL,
     InventoryQuantity   INT             NOT NULL DEFAULT 0,
-    PRIMARY KEY (StockCode),
+    PRIMARY KEY (ItemStockCode),
 
     CONSTRAINT CHK_Item_Price_Qty CHECK (Price >= 0 AND InventoryQuantity >= 0)
 );
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS InvoiceItem (
 
     CONSTRAINT FK_InvoiceItem_Item
         FOREIGN KEY (ItemStockCode)
-        REFERENCES Item (StockCode)
+        REFERENCES Item (ItemStockCode)
         ON DELETE NO ACTION
         ON UPDATE CASCADE,
 
