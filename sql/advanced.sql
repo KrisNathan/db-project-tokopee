@@ -14,7 +14,7 @@ FOR EACH ROW
 BEGIN
   UPDATE Item
   SET InventoryQuantity = InventoryQuantity - NEW.Quantity
-  WHERE StockCode = NEW.ItemStockCode;
+  WHERE ItemStockCode = NEW.ItemStockCode;
 END;
   
 -- Return, When a new item is removed from invoice, add it back into inventory
@@ -24,7 +24,7 @@ FOR EACH ROW
 BEGIN
   UPDATE Item
   SET InventoryQuantity = InventoryQuantity + OLD.Quantity
-  WHERE StockCode = OLD.ItemStockCode;
+  WHERE ItemStockCode = OLD.ItemStockCode;
 END;
   
 -- Return, When a quantity is changed, adjust inventory by difference
@@ -35,7 +35,7 @@ BEGIN
   IF OLD.Quantity <> NEW.Quantity THEN
     UPDATE Item 
     SET InventoryQuantity = InventoryQuantity - (NEW.Quantity - OLD.Quantity)
-    WHERE StockCode = NEW.ItemStockCode;
+    WHERE ItemStockCode = NEW.ItemStockCode;
   END IF;
 END;
 
