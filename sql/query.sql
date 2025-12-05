@@ -2,10 +2,10 @@ USE Tokopee_DB;
 
 -- Query 1: New Product
 -- Add a new, never-before-seen product to the database
-INSERT INTO Item (StockCode, Description, Price, InventoryQuantity)
+INSERT INTO Item (ItemStockCode, Description, Price, InventoryQuantity)
 VALUES ('NEW001', 'Wireless Gaming Mouse - High-precision wireless gaming mouse with RGB lighting', 89.99, 50);
 -- Verify the insert
-SELECT * FROM Item WHERE StockCode = 'NEW001';
+SELECT * FROM Item WHERE ItemStockCode = 'NEW001';
 
 
 
@@ -28,7 +28,7 @@ UPDATE Invoice
 SET TotalPrice = (
     SELECT SUM(ii.Quantity * i.Price)
     FROM InvoiceItem ii
-    JOIN Item i ON ii.ItemStockCode = i.StockCode
+    JOIN Item i ON ii.ItemStockCode = i.ItemStockCode
     WHERE ii.InvoiceId = 'INV_NEW001'
 )
 WHERE InvoiceId = 'INV_NEW001';
@@ -36,16 +36,16 @@ WHERE InvoiceId = 'INV_NEW001';
 -- Update inventory quantities for purchased items
 UPDATE Item
 SET InventoryQuantity = InventoryQuantity - 2
-WHERE StockCode = '10002';
+WHERE ItemStockCode = '10002';
 
 UPDATE Item
 SET InventoryQuantity = InventoryQuantity - 3
-WHERE StockCode = '10080';
+WHERE ItemStockCode = '10080';
 
 -- Verify the order
 SELECT * FROM Invoice WHERE InvoiceId = 'INV_NEW001';
 SELECT * FROM InvoiceItem WHERE InvoiceId = 'INV_NEW001';
-SELECT * FROM Item WHERE StockCode = '10002';
+SELECT * FROM Item WHERE ItemStockCode = '10002';
 
 
 -- Query 3: Customer Return
@@ -74,7 +74,7 @@ UPDATE Invoice
 SET TotalPrice = (
     SELECT COALESCE(SUM(ii.Quantity * i.Price), 0)
     FROM InvoiceItem ii
-    JOIN Item i ON ii.ItemStockCode = i.StockCode
+    JOIN Item i ON ii.ItemStockCode = i.ItemStockCode
     WHERE ii.InvoiceId = @return_invoice
 )
 WHERE InvoiceId = @return_invoice;
@@ -82,12 +82,12 @@ WHERE InvoiceId = @return_invoice;
 -- Restore inventory quantity
 UPDATE Item
 SET InventoryQuantity = InventoryQuantity + @return_quantity
-WHERE StockCode = @return_stockcode;
+WHERE ItemStockCode = @return_stockcode;
 
 -- Verify the return
 SELECT * FROM Invoice WHERE InvoiceId = 'INV_NEW001';
 SELECT * FROM InvoiceItem WHERE InvoiceId = 'INV_NEW001';
-SELECT * FROM Item WHERE StockCode = '10002';
+SELECT * FROM Item WHERE ItemStockCode = '10002';
 
 
 
