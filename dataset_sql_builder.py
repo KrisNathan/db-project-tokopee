@@ -49,7 +49,7 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
 
             yield DataRow(
                 invoice=row["Invoice"].upper(),
-                item_stock_code=row["ItemStockCode"].upper(),
+                item_stock_code=row["StockCode"].upper(),
                 description=None if row["Description"] == "" else row["Description"],
                 quantity=abs(int(row["Quantity"])),
                 invoice_date=parsed_dt,

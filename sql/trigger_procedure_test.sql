@@ -1,5 +1,5 @@
 -- Check initial state
-SELECT StockCode, InventoryQuantity FROM Item WHERE StockCode = 'NEW001';
+SELECT ItemStockCode, InventoryQuantity FROM Item WHERE ItemStockCode = 'NEW001';
 
 -- sell 5 items, should reduce Inventory by 5
 INSERT INTO Invoice (InvoiceId, InvoiceDate, CustomerId, TotalPrice) 
