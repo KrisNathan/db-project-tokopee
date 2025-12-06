@@ -19,7 +19,7 @@ def sql_escape(s: str) -> str:
 
 class DataRow(BaseModel):
     invoice: str
-    stock_code: str
+    item_stock_code: str
     description: Optional[str]
     quantity: int
     invoice_date: datetime
@@ -49,7 +49,7 @@ def read_typed_csv(filepath: str) -> Iterator[DataRow]:
 
             yield DataRow(
                 invoice=row["Invoice"].upper(),
-                stock_code=row["StockCode"].upper(),
+                item_stock_code=row["ItemStockCode"].upper(),
                 description=None if row["Description"] == "" else row["Description"],
                 quantity=abs(int(row["Quantity"])),
                 invoice_date=parsed_dt,
@@ -69,7 +69,7 @@ class Customer(BaseModel):
 
 
 class Item(BaseModel):
-    stock_code: str
+    item_stock_code: str
     description: str
     price: Decimal = Field(gt=Decimal("0"))
     inventory_quantity: int = Field(gt=0)
@@ -112,15 +112,15 @@ def main():
                 # print(f"{row}: {e}")
                 pass
 
-        if row.stock_code not in items and row.description:
+        if row.item_stock_code not in items and row.description:
             try:
                 item = Item(
-                    stock_code=row.stock_code,
+                    item_stock_code=row.item_stock_code,
                     description=row.description,
                     price=row.price,
                     inventory_quantity=10,  # no idea
                 )
-                items[row.stock_code] = item
+                items[row.item_stock_code] = item
             except ValidationError as e:
                 pass
 
@@ -144,16 +144,16 @@ def main():
 
         if (
             row.invoice
-            and row.stock_code
+            and row.item_stock_code
             and row.invoice in invoices
-            and row.stock_code in items
+            and row.item_stock_code in items
         ):
-            invoice_item_key = f"{row.invoice}-{row.stock_code}"
+            invoice_item_key = f"{row.invoice}-{row.item_stock_code}"
             if invoice_item_key not in invoice_items:
                 try:
                     invoice_item = InvoiceItem(
                         invoice_id=row.invoice,
-                        item_stock_code=row.stock_code,
+                        item_stock_code=row.item_stock_code,
                         quantity=row.quantity,
                     )
                     invoice_items[invoice_item_key] = invoice_item
@@ -171,7 +171,7 @@ def main():
 
         f.write("INSERT INTO Item VALUES\n")
         values = [
-            f"('{sql_escape(item.stock_code)}', '{sql_escape(item.description)}', {item.price}, {item.inventory_quantity})"
+            f"('{sql_escape(item.item_stock_code)}', '{sql_escape(item.description)}', {item.price}, {item.inventory_quantity})"
             for item in items.values()
         ]
         f.write(",\n".join(values) + ";\n\n")
